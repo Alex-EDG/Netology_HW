@@ -11,6 +11,7 @@
 [vk]
 
 API_version = 5.199 - версия используемого VK API
+
 access_token = ...... - токен доступа для приложение осуществляющего запросы от имени пользователя
 (можно плучить по ссылке https://oauth.vk.com/authorize?client_id=..your_App_ID...&display=page&redirect_uri=https://example.com/callback&scope=friends&response_type=token&v=5.199&state=123456)
 
