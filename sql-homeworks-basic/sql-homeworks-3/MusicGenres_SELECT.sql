@@ -36,10 +36,18 @@ RIGHT JOIN Albums a ON a.id = t.album_id
 GROUP BY a.name;
 
 --4. Все исполнители, которые не выпустили альбомы в 2020 году.
+/* Реализация "Кто выпустил хоть что-то, кроме тех, кто выпустил в 2020"
 SELECT ar.name FROM Albums al
 LEFT JOIN Artist_Album a_a ON al.id = a_a.album_id
 LEFT JOIN Artists ar ON ar.id = a_a.artist_id
-WHERE al.year <> 2020;
+WHERE al.year <> 2020;*/
+SELECT DISTINCT ar.name FROM Artists ar
+WHERE ar.name NOT IN (
+SELECT DISTINCT ar.name FROM Artists ar
+LEFT JOIN artist_album a_a ON ar.id = a_a.artist_id
+LEFT JOIN Albums al ON al.id = a_a.album_id
+WHERE al.year = 2020)
+ORDER BY ar.name;
 
 --5. Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
 SELECT c.name FROM Collections c
@@ -71,6 +79,9 @@ JOIN Tracks t ON t.album_id = a_a.album_id
 WHERE t.duratation = (SELECT MIN(duratation) FROM Tracks);
 
 --4. Названия альбомов, содержащих наименьшее количество треков.
+
+-- Вариант 1
+
 SELECT name FROM (
 SELECT al.name, COUNT(al.name) as cnt FROM Albums al
 JOIN Tracks t ON t.album_id = al.id
@@ -79,3 +90,15 @@ WHERE cnt = (SELECT MIN(cnt) FROM (
 SELECT COUNT(al.name) as cnt FROM Albums al
 JOIN Tracks t ON t.album_id = al.id
 group by al.name));
+
+-- Вариант 2
+
+SELECT al.name, COUNT(t.name) track_count FROM Albums al
+JOIN Tracks t ON al.id = t.album_id
+GROUP BY al.name
+HAVING COUNT(t.name) = (
+SELECT COUNT(t.name) FROM Albums al
+JOIN Tracks t ON al.id = t.album_id
+GROUP BY al.name
+ORDER BY COUNT(t.name)
+LIMIT 1);
