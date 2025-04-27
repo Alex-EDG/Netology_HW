@@ -5,4 +5,5 @@
 Смотри следующие файлы:
 
 Python-код: *.py.
-Тестируемый код для задания 1: src/app.py 
+Тестируемый код для задания 1: src/app.py
+YandexDisk token размещается в settings.ini
